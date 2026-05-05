@@ -115,6 +115,8 @@ To get MMAUTHTOKEN, log in to Mattermost > F12 > Application > Cookies > matterm
 
 On Windows, the script can automatically extract `MMAUTHTOKEN` from Firefox cookies.
 
+**Creating a backup may take some time, so it is highly recommended that you do not include channels that are unnecessary (such as channels that receive automatic notifications from Zabbix, Git, Jira, etc.).**
+
 ---
 
 ## Running the viewer
