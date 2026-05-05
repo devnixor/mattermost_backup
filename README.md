@@ -5,10 +5,12 @@ A two-part tool for backing up Mattermost conversations and browsing them throug
 Inspired by [RobertKrajewski's Mattermost export script](https://gist.github.com/RobertKrajewski/5847ce49333062ea4be1a08f2913288c).
 
 ---
+
 ## Note
 Due to the confidential nature of the data, it is strongly recommended that you secure access to the downloaded data, even on your local network!
 
 ---
+
 ## Features
 
 - **Full backup** of all channels, direct messages, and group conversations you have access to
@@ -35,8 +37,8 @@ Due to the confidential nature of the data, it is strongly recommended that you 
 - [`mattermostdriver`](https://github.com/Vaelor/python-mattermost-driver)
 
 ### Viewer
-- Apache2 with symlinks enabled
 - PHP 7+ (no extensions required)
+- Apache2 (optional, see below)
 
 ---
 
@@ -64,7 +66,42 @@ pip install mattermostdriver
 mkdir -p results
 ```
 
-### 4. Set up Apache
+---
+
+## Running the viewer
+
+### Option A — PHP built-in server (simplest, no Apache needed)
+
+No symlinks or extra configuration required.
+
+**Configure `mattermost.php`:**
+
+```php
+define('RESULTS_URL', '/results');
+```
+
+**Start the server:**
+
+```bash
+cd ~/mattermost_backup
+php -S localhost:8080 -t .
+```
+
+Open **`http://localhost:8080/mattermost.php`** in your browser.
+
+> PHP serves files directly from `~/mattermost_backup/` so `results/` is reachable at `/results` with no extra setup.
+
+---
+
+### Option B — Apache2
+
+**Install Apache and PHP if needed:**
+
+```bash
+sudo apt install apache2 php libapache2-mod-php
+```
+
+**Set up the directory structure:**
 
 ```bash
 # Create the directory for the viewer under Apache's document root
@@ -76,7 +113,8 @@ sudo cp mattermost.php /var/www/html/mattermost/
 # Create a symlink so Apache can serve the backup files
 sudo ln -s ~/mattermost_backup/results /var/www/html/mattermost/results
 
-
+# Allow Apache to read your home directory
+chmod o+x ~
 ```
 
 Your final structure will look like this:
@@ -89,21 +127,36 @@ Your final structure will look like this:
 ├── venv/
 └── results/
 
-
 /var/www/html/mattermost/
 ├── mattermost.php
 └── results -> ~/mattermost_backup/results    ← symlink
 ```
 
-### 5. Configure the viewer
-
-Edit the single constant at the top of `/var/www/html/mattermost/mattermost.php`:
+**Configure `mattermost.php`:**
 
 ```php
 define('RESULTS_URL', '/mattermost/results');
 ```
 
-This is the URL path to the symlink as seen by the browser. PHP resolves the real filesystem path automatically via `realpath()` — no hardcoded paths or usernames needed.
+**Enable symlinks in Apache (if needed):**
+
+Add this to your site config (`/etc/apache2/sites-enabled/000-default.conf`):
+
+```apache
+<Directory /var/www/html/mattermost>
+    Options +FollowSymLinks
+    AllowOverride None
+    Require all granted
+</Directory>
+```
+
+Then reload Apache:
+
+```bash
+sudo systemctl reload apache2
+```
+
+Open **`http://localhost/mattermost/mattermost.php`** in your browser.
 
 ---
 
@@ -131,8 +184,6 @@ python3 mattermost_backup.py --after 2024-01-01        # export posts after date
 python3 mattermost_backup.py --before 2024-12-31       # export posts before date
 python3 mattermost_backup.py --config my_config.json   # use custom config file
 ```
-
-Open **`http://localhost/mattermost/mattermost.php`** in your browser — all channels load automatically after each backup run.
 
 ---
 
@@ -241,12 +292,6 @@ Channel types: `O` = public, `P` = private, `D` = direct message, `G` = group me
 | `mattermost.php?api` | Returns JSON index of all channels with metadata |
 | `mattermost.php?search=query` | Full-text search, returns up to 50 results sorted newest-first |
 | `mattermost.php?search=query&limit=100` | Full-text search with custom result limit (max 200) |
-
-Configuration requires a single line at the top of `mattermost.php`:
-```php
-define('RESULTS_URL', '/mattermost/results');
-```
-This is the URL path to the symlink pointing at your `results/` directory. PHP resolves the filesystem path automatically via `realpath()`.
 
 ---
 
