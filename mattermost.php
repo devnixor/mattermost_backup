@@ -9,7 +9,7 @@
 // (ln -s ~/mattermost/results /var/www/html/mattermost/results)
 // then set this to '/mattermost/results'
   
-define('RESULTS_URL', '/mattermost/results');
+define('RESULTS_URL', '/results');
 
 // Maximum number of global search results
 define('SEARCH_LIMIT_MAX', 200);
