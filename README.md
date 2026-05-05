@@ -5,7 +5,10 @@ A two-part tool for backing up Mattermost conversations and browsing them throug
 Inspired by [RobertKrajewski's Mattermost export script](https://gist.github.com/RobertKrajewski/5847ce49333062ea4be1a08f2913288c).
 
 ---
+## Note
+Due to the confidential nature of the data, it is strongly recommended that you secure access to the downloaded data, even on your local network!
 
+---
 ## Features
 
 - **Full backup** of all channels, direct messages, and group conversations you have access to
