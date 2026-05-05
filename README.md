@@ -68,6 +68,55 @@ mkdir -p results
 
 ---
 
+## Running a backup
+
+```bash
+cd ~/mattermost_backup
+source venv/bin/activate
+python3 mattermost_backup.py
+```
+
+On first run you will be prompted for:
+- Server address (without `https://`, eg. mattermost.xyz.pl)
+- Login mode: `password` or `token` (preferred token if you use 2FA)
+- Whether to download attachments (select yes)
+- Export format: `json`, `markdown`, or `both` (select json if you want to use the Viewer)
+
+Settings (without password) are saved to `config.json` for subsequent runs.
+
+**Command-line options:**
+
+```bash
+python3 mattermost_backup.py --format markdown         # override export format
+python3 mattermost_backup.py --after 2024-01-01        # export posts after date
+python3 mattermost_backup.py --before 2024-12-31       # export posts before date
+python3 mattermost_backup.py --config my_config.json   # use custom config file
+```
+
+---
+
+## Authentication
+
+The backup script supports two login modes:
+
+**Password login:**
+```
+Login mode: password
+Username: your.username
+Password: (hidden input)
+```
+
+**Token login**
+```
+Login mode: token
+Token: your-MMAUTHTOKEN
+```
+To get MMAUTHTOKEN, log in to Mattermost > F12 > Application > Cookies > mattermost.xyz.pl > value of MMAUTHTOKEN
+
+On Windows, the script can automatically extract `MMAUTHTOKEN` from Firefox cookies.
+
+---
+
 ## Running the viewer
 
 ### Option A — PHP built-in server (simplest, no Apache needed)
@@ -160,53 +209,6 @@ Open **`http://localhost/mattermost/mattermost.php`** in your browser.
 
 ---
 
-## Running a backup
-
-```bash
-cd ~/mattermost_backup
-source venv/bin/activate
-python3 mattermost_backup.py
-```
-
-On first run you will be prompted for:
-- Server address (without `https://`)
-- Login mode: `password` or `token`
-- Whether to download attachments
-- Export format: `json`, `markdown`, or `both`
-
-Settings (without password) are saved to `config.json` for subsequent runs.
-
-**Command-line options:**
-
-```bash
-python3 mattermost_backup.py --format markdown         # override export format
-python3 mattermost_backup.py --after 2024-01-01        # export posts after date
-python3 mattermost_backup.py --before 2024-12-31       # export posts before date
-python3 mattermost_backup.py --config my_config.json   # use custom config file
-```
-
----
-
-## Authentication
-
-The backup script supports two login modes:
-
-**Password login:**
-```
-Login mode: password
-Username: your.username
-Password: (hidden input)
-```
-
-**Token login** (e.g. GitLab OAuth):
-```
-Login mode: token
-Token: your-MMAUTHTOKEN
-```
-
-On Windows, the script can automatically extract `MMAUTHTOKEN` from Firefox cookies.
-
----
 
 ## Viewer Features
 
