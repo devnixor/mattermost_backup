@@ -119,7 +119,7 @@ On Windows, the script can automatically extract `MMAUTHTOKEN` from Firefox cook
 
 ## Running the viewer
 
-### Option A — PHP built-in server (simplest, no Apache needed)
+### Option A — PHP built-in server (preferred, simplest, no Apache needed)
 
 No symlinks or extra configuration required.
 
