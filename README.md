@@ -138,7 +138,7 @@ cd ~/mattermost_backup
 php -S localhost:8080 -t .
 ```
 
-Open **`http://localhost:8080/mattermost.php`** in your browser.
+Open **[http://localhost:8080/mattermost.php](http://localhost:8080/mattermost.php)** in your browser.
 
 > PHP serves files directly from `~/mattermost_backup/` so `results/` is reachable at `/results` with no extra setup.
 
